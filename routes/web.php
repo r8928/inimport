@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\InvoiceImportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome')->name('home');
+Route::post('/', InvoiceImportController::class);
+Route::get('list', [InvoiceController::class, 'index'])->name('invoice.list');
+Route::get('list/{invoice_no}', [InvoiceController::class, 'show'])->name('invoice.show');
+Route::get('list/send/{invoice_no}', [InvoiceController::class, 'send'])->name('invoice.send');

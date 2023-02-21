@@ -68,6 +68,11 @@ return [
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
+        'elastic_email' => [
+            'transport' => 'elasticemail',
+            'key' => env('ELASTIC_KEY'),
+        ],
+
         'log' => [
             'transport' => 'log',
             'channel' => env('MAIL_LOG_CHANNEL'),

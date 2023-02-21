@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
 
+            $table->foreignId('parent_id')->nullable();
             $table->text('invoice_no')->nullable();
             $table->text('customer_name')->nullable();
             $table->text('email')->nullable();
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->decimal('rate', 10)->nullable();
             $table->decimal('amount', 10)->nullable();
             $table->decimal('tax_rate', 10)->nullable();
+            $table->decimal('total', 10)->nullable();
 
             $table->timestamps();
         });
