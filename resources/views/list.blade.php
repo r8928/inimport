@@ -14,10 +14,19 @@
 
     <div class="container">
 
-        <div class="mb-3">
+        <div class="d-flex mb-3" style="gap:10px">
             <button class="btn btn-primary" type="button" onclick="javascript:alert('Disabled in DEMO');">
                 >> Send All Emails
             </button>
+
+            <form class="d-flex align-items-center" method="POST" action="{{ route('config.force-to-email') }}">
+                @csrf
+                <span class="text-right mr-2">Set DEMO "TO" email</span>
+                <input class="form-control" type="email" name="email" required
+                    value="{{ \App\Models\Config::value('force-to-email') }}" />
+                <button class="btn btn-dark btn-sm ml-2" type="submit">✔</button>
+            </form>
+
         </div>
         <div class="table-responsive">
             <table class="table">

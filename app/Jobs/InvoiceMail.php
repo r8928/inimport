@@ -54,5 +54,9 @@ class InvoiceMail implements ShouldQueue
             'from' => config('mail.from.address'),
             'bodyHtml' => 'Please see attachments for more information',
         ], [$path]);
+
+        sleep(1);
+
+        Storage::delete('uploads/' . $first->invoice_no . '.pdf');
     }
 }
