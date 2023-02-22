@@ -11,7 +11,7 @@ class InvoiceController extends Controller
     {
         $data = Invoice::where('customer_name', '!=', '')->paginate(50);
 
-        if (! $data->count()) {
+        if (!$data->count()) {
             return redirect()->route('home');
         }
 
@@ -22,7 +22,7 @@ class InvoiceController extends Controller
     {
         $data = Invoice::where('invoice_no', $invoice_no)->orderBy('id')->get();
 
-        if (! $data->count()) {
+        if (!$data->count()) {
             return redirect()->route('invoice.list');
         }
 
@@ -35,7 +35,7 @@ class InvoiceController extends Controller
     {
         $data = Invoice::where('invoice_no', $invoice_no)->orderBy('id')->get();
 
-        if (! $data->count()) {
+        if (!$data->count()) {
             return redirect()->route('invoice.list');
         }
 

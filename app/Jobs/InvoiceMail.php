@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class InvoiceMail implements ShouldQueue
 {
@@ -38,11 +40,19 @@ class InvoiceMail implements ShouldQueue
             return;
         }
 
+        $pdf = Pdf::loadView('invoice', compact('data', 'first'));
+        $file = $pdf->setPaper('a4', 'portrait')
+            ->setWarnings(false)
+            ->output();
+
+        Storage::put('uploads/' . $first->invoice_no . '.pdf', $file);
+        $path = Storage::path('uploads/' . $first->invoice_no . '.pdf');
+
         $elasticEmail->email()->send([
             'to' => $to,
             'subject' => 'Invoice Mail',
             'from' => config('mail.from.address'),
-            'bodyHtml' => view('invoice', compact('data', 'first'))->render(),
-        ]);
+            'bodyHtml' => 'Please see attachments for more information',
+        ], [$path]);
     }
 }

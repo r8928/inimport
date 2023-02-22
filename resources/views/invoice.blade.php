@@ -8,6 +8,7 @@
     <title>Invoice to Email | OrangeSoft</title>
 
     <style>
+        .display-4,
         html,
         body,
         h1,
@@ -24,7 +25,7 @@
         html,
         body {
             font-size: 18px;
-            width: 800px;
+            width: 100%;
             margin: auto;
         }
 
@@ -68,7 +69,7 @@
 </head>
 
 <body>
-    <table border=0 width="800px">
+    <table border=0 cellpadding=10 width="100%">
         <tr>
             <td>
                 <table border=0 width="100%">
@@ -91,12 +92,11 @@
                 <table border=0 width="100%">
                     <tr>
                         <td width="33.33%">
-                            <em class="text-muted">Invoice to</em>
                             <h5 class="mb-0">{{ $first->customer_name }}</h5>
                             {{ $first->email }}
                         </td>
                         <td width="33.33%" align="center">
-                            <div class="display-4">INVOICE</div>
+                            <div class="display-4" style="font-family: sans-serif">INVOICE</div>
                             <h5>{{ $first->invoice_no }}</h5>
                         </td>
                         <td width="33.33%" align="right">
