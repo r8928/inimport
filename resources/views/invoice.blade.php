@@ -27,6 +27,7 @@
             font-size: 18px;
             width: 100%;
             margin: auto;
+            {{ !app()->runningInConsole() ? 'width : 800px' : '' }}
         }
 
         h1,
@@ -56,6 +57,11 @@
             border-bottom: 1px solid silver;
         }
 
+        th,
+        td {
+            word-break: break-word;
+        }
+
         .display-4 {
             font-size: 3rem;
             font-weight: 300;
@@ -74,11 +80,15 @@
             <td>
                 <table border=0 width="100%">
                     <tr>
-                        <td>
+                        <td width="33.33%">
                             <img class="img" alt="Invoce Template"
                                 src="https://cdn-icons-png.flaticon.com/512/2474/2474482.png" height="100px" />
                         </td>
-                        <td align="right">
+                        <td width="33.33%" align="center">
+                            <div class="display-4" style="font-family: sans-serif">INVOICE</div>
+                            <h5>{{ $first->invoice_no }}</h5>
+                        </td>
+                        <td width="33.33%" align="right">
                             <h3>OrangeSoft</h3>
                             <div>420, 9211 Street</div>
                             <div>1800-234-124</div>
@@ -95,10 +105,7 @@
                             <h5 class="mb-0">{{ $first->customer_name }}</h5>
                             {{ $first->email }}
                         </td>
-                        <td width="33.33%" align="center">
-                            <div class="display-4" style="font-family: sans-serif">INVOICE</div>
-                            <h5>{{ $first->invoice_no }}</h5>
-                        </td>
+
                         <td width="33.33%" align="right">
                             <div>
                                 <em class="text-muted">Bill date</em>
@@ -117,7 +124,7 @@
                 <table width="100%" cellpadding="15" border="0" cellspacing="0">
                     <thead>
                         <tr class="border">
-                            <th width=70% align="left">Description</th>
+                            <th width=60% align="left">Description</th>
                             <th align="right">Qty</th>
                             <th align="right">Rate</th>
                             <th align="right">Amount</th>
