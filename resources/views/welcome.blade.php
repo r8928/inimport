@@ -18,8 +18,9 @@
 
             <label>Import CSV</label>
             <div class="custom-file">
-                <input type="file" class="custom-file-input" name="file">
+                <input type="file" class="custom-file-input" name="file" required accept=".csv">
                 <label class="custom-file-label" for="customFile">Choose file</label>
+                <div class="small text-danger">DEMO: Only 5kb file allowed</div>
             </div>
 
             <x-errors></x-errors>

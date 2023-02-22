@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Config;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,9 +32,14 @@ class InvoiceMail implements ShouldQueue
 
         $data = $this->data;
         $first = $this->data->first();
+        $to = Config::value('force-to-email') ?? $data->email;
+
+        if (!$to) {
+            return;
+        }
 
         $elasticEmail->email()->send([
-            'to' => 'tmp.rashid@gmail.com',
+            'to' => $to,
             'subject' => 'Invoice Mail',
             'from' => config('mail.from.address'),
             'bodyHtml' => view('invoice', compact('data', 'first'))->render(),

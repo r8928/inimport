@@ -10,9 +10,15 @@
 </head>
 
 <body>
-    <div class="display-3 text-primary text-center mb-5">OrangeSoft</div>
+    <a href="/" class="d-block display-3 text-primary text-center mb-5">OrangeSoft</a>
 
     <div class="container">
+
+        <div class="mb-3">
+            <button class="btn btn-primary" type="button" onclick="javascript:alert('Disabled in DEMO');">
+                >> Send All Emails
+            </button>
+        </div>
         <div class="table-responsive">
             <table class="table">
                 <thead class="bg-primary text-white">
