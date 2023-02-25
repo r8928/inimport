@@ -3,12 +3,12 @@
 namespace App\Jobs;
 
 use App\Models\Config;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceMail implements ShouldQueue
@@ -34,29 +34,65 @@ class InvoiceMail implements ShouldQueue
 
         $data = $this->data;
         $first = $this->data->first();
-        $to = Config::value('force-to-email') ?? $data->email;
+
+        $from = Config::value('send-from-email');
+        $to = Config::value('demo-mode')
+            ? Config::value('force-to-email')
+            : $data->email;
+
+        $subject = $this->text(Config::value('email-subject') ?? '');
+        $body = $this->text(Config::value('email-body') ?? '');
 
         if (!$to) {
+            logger('email not sent "$to" not set');
             return;
         }
 
-        $pdf = Pdf::loadView('invoice', compact('data', 'first'));
+        if (!$from) {
+            logger('email not sent "$from" not set');
+            return;
+        }
+
+        if (!$subject) {
+            logger('email not sent "$subject" not set');
+            return;
+        }
+
+        if (!$body) {
+            logger('email not sent "$body" not set');
+            return;
+        }
+
+        $pdf = Pdf::loadView('invoice.show', compact('data', 'first'));
         $file = $pdf->setPaper('a4', 'portrait')
             ->setWarnings(false)
             ->output();
 
-        Storage::put('uploads/' . $first->invoice_no . '.pdf', $file);
-        $path = Storage::path('uploads/' . $first->invoice_no . '.pdf');
+        $file_path = 'uploads/' . $first->invoice_no . '.pdf';
 
-        $elasticEmail->email()->send([
-            'to' => $to,
-            'subject' => 'Invoice Mail',
-            'from' => config('mail.from.address'),
-            'bodyHtml' => 'Please see attachments for more information',
-        ], [$path]);
+        Storage::put($file_path, $file);
+        $path = Storage::path($file_path);
 
-        sleep(1);
+        if (Storage::exists($file_path)) {
+            $elasticEmail->email()->send([
+                'to' => $to,
+                'subject' => $subject,
+                'from' => $from,
+                'bodyHtml' => $body,
+            ], [$path]);
 
-        Storage::delete('uploads/' . $first->invoice_no . '.pdf');
+            sleep(0.5);
+
+            @Storage::delete($file_path);
+        }
+    }
+
+    public function text($string)
+    {
+        $first = $this->data->first();
+        $string = str_replace('[customer]', $first->customer_name, $string);
+        $string = str_replace('[amount]', number_format($first->total, 2), $string);
+
+        return $string;
     }
 }

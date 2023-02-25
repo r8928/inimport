@@ -15,7 +15,7 @@ class InvoiceController extends Controller
             return redirect()->route('home');
         }
 
-        return view('list', compact('data'));
+        return view('invoice.list', compact('data'));
     }
 
     public function show($invoice_no)
@@ -28,7 +28,7 @@ class InvoiceController extends Controller
 
         $first = $data->first();
 
-        return view('invoice', compact('data', 'first'));
+        return view('invoice.show', compact('data', 'first'));
     }
 
     public function send($invoice_no)

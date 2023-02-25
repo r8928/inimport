@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice to Email | OrangeSoft</title>
+    <title>Invoice #{{ $first->invoice_no }} | @config('application-title')</title>
 
     <style>
         .display-4,
@@ -24,7 +24,7 @@
 
         html,
         body {
-            font-size: 18px;
+            font-size: 16px;
             width: 100%;
             margin: auto;
             {{ !app()->runningInConsole() ? 'width : 800px' : '' }}
@@ -55,6 +55,10 @@
         tr.border th,
         tr.border td {
             border-bottom: 1px solid silver;
+        }
+
+        tr.border>th {
+            border-top: 1px solid silver;
         }
 
         th,
@@ -89,14 +93,16 @@
                             <h5>{{ $first->invoice_no }}</h5>
                         </td>
                         <td width="33.33%" align="right">
-                            <h3>OrangeSoft</h3>
-                            <div>420, 9211 Street</div>
-                            <div>1800-234-124</div>
-                            <div>example@gmail.com</div>
+                            <h3>@config('company-name')</h3>
+                            <div>@config('company-address')</div>
+                            <div>@config('company-phone')</div>
+                            <div>@config('company-email')</div>
                         </td>
                     </tr>
                 </table>
 
+                <br />
+                <br />
                 <br />
 
                 <table border=0 width="100%">
@@ -119,6 +125,7 @@
                     </tr>
                 </table>
 
+                <br />
                 <br />
 
                 <table width="100%" cellpadding="15" border="0" cellspacing="0">

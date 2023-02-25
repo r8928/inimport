@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\InvoiceImportController;
@@ -16,9 +17,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome')->name('home');
-Route::post('/', InvoiceImportController::class);
-Route::get('list', [InvoiceController::class, 'index'])->name('invoice.list');
-Route::get('list/{invoice_no}', [InvoiceController::class, 'show'])->name('invoice.show');
-Route::get('list/send/{invoice_no}', [InvoiceController::class, 'send'])->name('invoice.send');
-Route::post('config/force-to-email', [ConfigController::class, 'forceToEmail'])->name('config.force-to-email');
+Route::get('/', [AuthController::class, 'login'])->name('login');
+Route::post('/', [AuthController::class, 'postLogin']);
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::view('/upload', 'upload')->name('home');
+    Route::post('/upload', InvoiceImportController::class);
+
+    Route::prefix('invoice')->controller(InvoiceController::class)->group(function () {
+        Route::get('', 'index')->name('invoice.list');
+        Route::get('{invoice_no}', 'show')->name('invoice.show');
+        Route::get('send/{invoice_no}', 'send')->name('invoice.send');
+    });
+
+    Route::prefix('config')->controller(ConfigController::class)->group(function () {
+        Route::get('', 'index')->name('config.index');
+        Route::post('', 'store');
+        Route::post('super', 'storesuper')->name('config.super');
+    });
+});
+
+Route::fallback(function () {
+    return redirect()->route('login');
+});

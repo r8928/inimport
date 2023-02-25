@@ -24,6 +24,22 @@ class Config extends Model
 
     public static function value(string $key)
     {
-        return (new static)::where('key', $key)->first()->value ?? null;
+        if (cache()->has($key)) {
+            return cache($key);
+        }
+
+        return cache()->rememberForever($key, function () use ($key) {
+            return (new static())::where('key', $key)->first()->value ?? null;
+        });
+    }
+
+    public static function set($key, $value)
+    {
+        cache()->forget($key);
+
+        return (new static())::updateOrCreate(
+            ['key' => $key],
+            ['value' => $value],
+        );
     }
 }
